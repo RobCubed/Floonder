@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport"
+              content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>{{ path }} - {{ SITENAME }}</title>
+        <link rel="stylesheet" href="/static/style.css">
+        <script src="/static/hls.js"></script>
+
+
+    </head>
+    <body>
+        {% include "sidebar.html" %}
+
+        <div class="content">
+            <div class="stream">
+                {% if active %}
+                    <input id="fullscreen" type="checkbox">
+                    <video id="video" controls autoplay></video>
+                    <script defer>
+                        var video = document.getElementById('video');
+                        var videoSrc = '{{ HLSURL }}/{{ path }}/stream.m3u8';
+                        if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                            video.src = videoSrc;
+                        } else if (Hls.isSupported()) {
+                            var hls = new Hls();
+                            hls.loadSource(videoSrc);
+                            hls.attachMedia(video);
+                        }
+                    </script>
+                    <span class="stream-username">{{ path }}</span> <label class="fullscreen-label" for="fullscreen">⛶</label>
+                    <span class="stream-title">{{ info["title"] }}</span>
+                {% else %}
+                    <span class="inactive">{{ path }} is currently not streaming.</span>
+                {% endif %}
+
+            </div>
+        </div>
+
+
+    </body>
+</html>

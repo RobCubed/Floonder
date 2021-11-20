@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport"
+              content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Account Settings - {{ SITENAME }}</title>
+        <link rel="stylesheet" href="/static/style.css">
+    </head>
+    <body>
+        {% include "sidebar.html" %}
+        <div class="content">
+            <div class="settings">
+                <h3>Account Settings</h3>
+                <hr>
+                <form method="post">
+                    <span class="error longerror">{{ title_error }}</span>
+                    Stream title: <input type="text" class="fancyinput" width="64" name="title" value="{{ account["title"] }}"><br>
+                    Stream visibility: <select name="visibility" class="fancyselect" autocomplete="off">
+                        <option value="0" {{ "selected=selected" if account["hidden"] == 0 }}>Public</option>
+                        <option value="1" {{ "selected=selected" if account["hidden"] == 1 }}>Hidden</option>
+                    </select><br>
+                    <button class="fancybutton">Save</button>
+                    <hr>
+                    <h3>OBS Settings</h3>
+                    Service: Custom...<br>
+                    Server: <span class="preformatted">{{ RTMPURL }}</span><br>
+                    Stream Key: <input readonly class="streamkey" value="{{ account["username"] }}?user={{ account["username"] }}&pass={{ account["key"] }}"><input readonly class="hoverhide" value="Hover to reveal">
+
+                </form>
+            </div>
+        </div>
+    </body>
+</html>

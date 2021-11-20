@@ -1,0 +1,214 @@
+body, html {
+    background: #191919;
+    color: aliceblue;
+    font-family: "MS Gothic", "Courier New", monospace;
+}
+
+body {
+    display: flex;
+    flex-direction: row;
+}
+
+.content {
+    width: 100%;
+    height: 100%;
+}
+
+#video {
+    width: 100%;
+}
+
+header {
+    display: flex;
+    flex-direction: row;
+    border-right: 1px solid #555555;
+    width: 200px;
+    min-height: calc(100vh - 16px);
+}
+.side-sidebar {
+    display: flex;
+    flex-direction: column;
+}
+
+
+.floon {
+    width: 100px;
+    object-fit: contain;
+    align-self: baseline
+
+}
+
+.der {
+    width: 60px
+}
+
+.fish {
+    height: 150px;
+}
+
+.sidebar-link:visited, .sidebar-link:link {
+    color: #8776af;
+    font-weight: bold;
+}
+
+.active:link, .active:visited {
+    color: white;
+    text-decoration: none;
+    pointer-events: none;
+}
+
+.centerbox {
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    align-self: center;
+    justify-content: space-evenly;
+}
+
+.loginbox, .registerbox {
+    border: 1px solid #555555;
+    padding: 1em;
+}
+
+.logged-in-user {
+    position: fixed;
+    bottom: 1em;
+    left: 1em;
+}
+
+.error {
+    color: red;
+    display: block;
+    word-wrap: anywhere;
+    word-break: break-word;
+    max-width: 10em;
+    font-size: small;
+    font-weight: bold
+}
+
+.longerror {
+    max-width: unset;
+}
+
+.settings {
+    line-height: 2em;
+    padding: 1em;
+    position: relative;
+}
+
+.fancyinput {
+    background: rgba(0,0,0,0.3);
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    color: white;
+    font-weight: bold;
+}
+
+.fancyselect {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid white;
+    color: white
+}
+
+.fancybutton {
+    min-width: 7em;
+    background: rgba(0,0,0,0.3);
+    color: white;
+    font-weight: bold;
+}
+
+.preformatted {
+    font-family: monospace;
+    background: rgba(255,255,255,0.3);
+    color: white;
+    padding: 0.1em 0.2em;
+    vertical-align: top
+}
+
+.streampreview {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid white;
+    padding: 0.2em;
+    border-radius: 4px;
+    margin: 1em
+}
+
+.preview-title {
+    font-weight: bold;
+    word-break: break-word;
+    font-size: small;
+    max-width: 320px;
+}
+
+.preview-username {
+    font-size: x-small;
+    color: #aaa
+}
+
+.streamlist {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap
+}
+
+.stream {
+    padding: 1em;
+}
+
+.stream-title {
+    display: block;
+    font-size: small
+}
+.stream-username {
+    font-weight: bold;
+}
+
+#fullscreen {
+    display: none;
+}
+
+#fullscreen:checked ~ #video {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    padding: 0;
+    top: 0;
+    height: 100%;
+    background: black;
+}
+
+.fullscreen-label {
+    border-radius: 2px;
+    padding: 0.1em;
+    float: right;
+    cursor: pointer;
+}
+
+#fullscreen:checked ~ .fullscreen-label {
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 999;
+    font-size: 24pt;
+    opacity: 0;
+    transition: opacity 1s;
+}
+
+#fullscreen:checked ~ .fullscreen-label:hover {
+    opacity: 90;
+    transition: opacity 0.5s;
+}
+
+.hoverhide, .streamkey {
+    width: 10em;
+}
+
+.hoverhide {
+    position: relative;
+    left: -10.6em
+}
+.hoverhide:hover, .streamkey:hover ~ .hoverhide {
+    display: none;
+}

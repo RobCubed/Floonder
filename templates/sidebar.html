@@ -1,0 +1,13 @@
+<header>
+    <a class="fish" href="/"><img class="floon" src="/static/floon.png" alt="floonder"></a>
+    <div class="side-sidebar">
+        <a href="/"><img class="der" src="/static/der.png" alt="floonder"></a>
+        <a href="/" class="sidebar-link {{ "active" if request.url_rule.__str__() == "/" else "" }}">Home</a>
+        <a href="/account" class="sidebar-link {{ "active" if request.url_rule.__str__() in ("/account", "/login") else "" }}">Account</a>
+    </div>
+
+    <div class="logged-in-user">
+        {{ "Logged in: "+session["user"] if "user" in session else "Anonymous" }}<br>
+        {% if "user" in session %}<a href="/logout">Logout</a> {% endif %}
+    </div>
+</header>

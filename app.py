@@ -133,7 +133,7 @@ def stream(user):
 def thumbnail(path):
     if path not in thumbs or thumbs[path][1] < time.time():
         proc = subprocess.Popen(
-            ["ffmpeg", "-hide_banner", "-loglevel", "quiet", "-i", f"http://localhost:8888/{path}/stream.m3u8",
+            ["ffmpeg", "-hide_banner", "-loglevel", "quiet", "-i", f"{config.hlsurl}/{path}/stream.m3u8",
              "-vframes", '1', '-vf', "scale=320:-1", "-f", "image2", "-"],
             stdout=subprocess.PIPE)
         thumbs[path] = (proc.communicate()[0], time.time() + 60)

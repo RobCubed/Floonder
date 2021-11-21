@@ -9,11 +9,9 @@ import time
 thumbs = {}
 database.Initialize()
 
-
-
-
 app = Flask(__name__)
 app.config["SECRET_KEY"] = config.key
+
 
 @app.after_request
 def add_header(r):
@@ -27,11 +25,13 @@ def add_header(r):
     r.headers['Cache-Control'] = 'public, max-age=0'
     return r
 
+
 @app.teardown_appcontext
 def close_connection(exception):
     db = getattr(g, '_database', None)
     if db is not None:
         db.close()
+
 
 @app.context_processor
 def LoadGlobals():
@@ -41,6 +41,7 @@ def LoadGlobals():
         "RTMPURL": config.rtmpurl,
         "HLSURL": config.hlsurl
     }
+
 
 @app.route('/account', methods=["GET", "POST"])
 def account():
@@ -64,10 +65,12 @@ def account():
     else:
         return redirect("/login", 302)
 
+
 @app.route("/logout")
 def logout():
     session.clear()
     return redirect("/", 302)
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -120,6 +123,7 @@ def login():
 
     return render_template("login.html", login_error=login_error, register_error=register_error)
 
+
 @app.route("/s/<user>")
 def stream(user):
     return render_template("stream.html", path=user, active=api.IsPathActive(user), info=database.GetAccount(user))
@@ -128,9 +132,11 @@ def stream(user):
 @app.route("/thumb/<path>.jpg")
 def thumbnail(path):
     if path not in thumbs or thumbs[path][1] < time.time():
-        proc = subprocess.Popen(["ffmpeg", "-hide_banner", "-loglevel", "quiet", "-i", f"http://localhost:8888/{path}/stream.m3u8", "-vframes", '1', '-vf', "scale=320:-1", "-f", "image2", "-"],
-                                stdout=subprocess.PIPE)
-        thumbs[path] = (proc.communicate()[0], time.time()+60)
+        proc = subprocess.Popen(
+            ["ffmpeg", "-hide_banner", "-loglevel", "quiet", "-i", f"http://localhost:8888/{path}/stream.m3u8",
+             "-vframes", '1', '-vf', "scale=320:-1", "-f", "image2", "-"],
+            stdout=subprocess.PIPE)
+        thumbs[path] = (proc.communicate()[0], time.time() + 60)
     return Response(thumbs[path][0], mimetype="image/jpeg")
 
 
@@ -138,11 +144,11 @@ def thumbnail(path):
 def about():
     return render_template("about.html")
 
+
 @app.route('/')
 def index():
     streaming = api.GetAllStreaming()
     return render_template("index.html", streaming=streaming)
-
 
 
 if __name__ == '__main__':

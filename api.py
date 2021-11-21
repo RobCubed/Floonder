@@ -1,17 +1,15 @@
 import requests
 import config
-import base64
-from hashlib import sha256
 
 import database
 
 
 def AddPath(name, password):
     req = requests.post(config.apibase + f"config/paths/add/{name}",
-                  json={
-                      "publishUser": name,
-                      "publishPass": password
-                  })
+                        json={
+                            "publishUser": name,
+                            "publishPass": password
+                        })
     return req.status_code == 200
 
 

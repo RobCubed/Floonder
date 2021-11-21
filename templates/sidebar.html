@@ -4,6 +4,7 @@
         <a href="/"><img class="der" src="/static/der.png" alt="floonder"></a>
         <a href="/" class="sidebar-link {{ "active" if request.url_rule.__str__() == "/" else "" }}">Home</a>
         <a href="/account" class="sidebar-link {{ "active" if request.url_rule.__str__() in ("/account", "/login") else "" }}">Account</a>
+        <a href="/about" class="sidebar-link {{ "active" if request.url_rule.__str__()  == "/about" else "" }}">About</a>
     </div>
 
     <div class="logged-in-user">

@@ -5,16 +5,18 @@
         <meta name="viewport"
               content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>Register - {{ SITENAME }}</title>
+        <title>About - {{ SITENAME }}</title>
         <link rel="stylesheet" href="/static/style.css">
     </head>
     <body>
-        <div class="container">
-            <header>
-                <h1>TODO</h1>
-            </header>
+        {% include "sidebar.html" %}
+        <div class="content">
+            <h3>About {{ SITENAME }}</h3>
+            <hr>
+            <div>
+                Server backend provided by <a href="https://github.com/aler9/rtsp-simple-server">rtsp-simple-server</a><br>
+                Logo made by Chedder#2823
+            </div>
         </div>
-
-
     </body>
 </html>

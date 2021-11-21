@@ -97,7 +97,8 @@ def login():
                     len(form["username"]) <= 20,
                     len(form["password"]) > 5,
                     len(form["password"]) <= 128,
-                    form["password"] == form["password-confirm"]
+                    form["password"] == form["password-confirm"],
+                    bool(database.HasToken(form.get("invite", "-")))
                 ]
                 messages = [
                     "You need a password.",
@@ -106,10 +107,12 @@ def login():
                     "Usernames must be 20 characters or less",
                     "Passwords must be 6 characters or more",
                     "Passwords must be 128 characters or less",
-                    "Passwords do not match."
+                    "Passwords do not match.",
+                    "Invalid invite."
                 ]
                 if all(validations):
                     database.CreateAccount(form["username"], form["password"])
+                    database.RemoveToken(form.get("invite", "-"))
                     session["user"] = form["username"]
                     return redirect("/", 302)
                 else:
@@ -130,6 +133,10 @@ def thumbnail(path):
         thumbs[path] = (proc.communicate()[0], time.time()+60)
     return Response(thumbs[path][0], mimetype="image/jpeg")
 
+
+@app.route('/about')
+def about():
+    return render_template("about.html")
 
 @app.route('/')
 def index():

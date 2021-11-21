@@ -25,6 +25,7 @@ def Initialize():
     _local.row_factory = make_dicts
     _local.execute("PRAGMA journal_mode = WAL;")
     _local.execute("CREATE TABLE IF NOT EXISTS users (`username` STRING, `password` STRING, `title` STRING, `key` STRING, `hidden` INTEGER)")
+    _local.execute("CREATE TABLE IF NOT EXISTS invites (`token` TEXT)")
 
 
     for row in _local.execute("SELECT * FROM users"):
@@ -52,4 +53,17 @@ def UpdateAccount(username, title, visibility):
     get_db().execute("UPDATE `users` SET `title` = ?, `hidden` = ? WHERE username = ?",
                      (
                          title, visibility, username
+                     ))
+
+def HasToken(token):
+    q = get_db().execute("SELECT * FROM invites WHERE token = ?",
+                     (
+                         token,
+                     ))
+    return q.fetchone()
+
+def RemoveToken(token):
+    get_db().execute("DELETE FROM `invites` WHERE `token` = ?",
+                     (
+                         token,
                      ))

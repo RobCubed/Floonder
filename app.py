@@ -37,7 +37,6 @@ def close_connection(exception):
 def LoadGlobals():
     return {
         "SITENAME": config.sitename,
-        "HOSTNAME": config.hostname,
         "RTMPURL": config.rtmpurl,
         "HLSURL": config.hlsurl
     }

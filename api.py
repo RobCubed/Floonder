@@ -1,28 +1,27 @@
 import requests
 import config
+import base64
 
 import database
 
-
-def AddPath(name, password):
-    req = requests.post(config.apibase + f"config/paths/add/{name}",
-                        json={
-                            "publishUser": name,
-                            "publishPass": password
-                        })
-    return req.status_code == 200
-
+session = requests.session()
+session.headers["Authorization"] = f"Basic {base64.b64encode(config.apikey).decode('ascii')}"
 
 def GetAllStreaming():
-    req = requests.get(config.apibase + f"paths/list")
-    for path, info in req.json()["items"].items():
-        if info["sourceReady"]:
-            user = database.GetAccount(path)
-            if user["hidden"] == 1:
-                continue
-            yield path, user, info
+    req = session.get(config.apibase + f"vhosts/default/apps/{config.ovenapp}/streams")
+    for stream in req.json()["response"]:
+
+        user = database.GetAccount(stream)
+        if user["hidden"] == 1:
+            continue
+        user["viewcount"] = GetViewers(user["username"])
+        yield user
 
 
 def IsPathActive(path):
-    req = requests.get(f"http://localhost:8888/{path}/")
+    req = session.get(config.apibase + f"vhosts/default/apps/app/streams/{path}")
     return req.status_code == 200
+
+def GetViewers(path):
+    req = session.get(config.apibase+f"stats/current/vhosts/default/apps/{config.ovenapp}/streams/{path}")
+    return req.json().get("response", {}).get("totalConnections", 0)

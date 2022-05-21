@@ -212,3 +212,20 @@ header {
 .hoverhide:hover, .streamkey:hover ~ .hoverhide {
     display: none;
 }
+
+.viewcount {
+    font-size: small;
+    float: right;
+    display: block
+}
+
+.viewcountframe {
+    border: 0;
+    height: 2em;
+    width: 8em;
+    float: right;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    top: -1em
+}

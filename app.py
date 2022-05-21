@@ -5,6 +5,7 @@ import api
 import database
 import subprocess
 import time
+import json
 
 thumbs = {}
 database.Initialize()
@@ -12,18 +13,18 @@ database.Initialize()
 app = Flask(__name__)
 app.config["SECRET_KEY"] = config.key
 
-
+"""
 @app.after_request
 def add_header(r):
-    """
+    ""
     Add headers to both force latest IE rendering engine or Chrome Frame,
     and also to cache the rendered page for 10 minutes.
-    """
+    ""
     r.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
     r.headers["Pragma"] = "no-cache"
     r.headers["Expires"] = "0"
     r.headers['Cache-Control'] = 'public, max-age=0'
-    return r
+    return r"""
 
 
 @app.teardown_appcontext
@@ -38,8 +39,26 @@ def LoadGlobals():
     return {
         "SITENAME": config.sitename,
         "RTMPURL": config.rtmpurl,
-        "HLSURL": config.hlsurl
+        "WSURL": config.wsurl,
+        "THUMBNAILURL": config.thumbnailurl,
+        "HOSTNAME": config.hostname
     }
+
+
+@app.route("/auth", methods=["POST"])
+def auth():
+    j = request.get_json()
+    if not j:  return Response("not valid json", status=400)
+    if j.get("request", {}).get("direction", "") == "outgoing":
+        return {"allowed": True}
+    elif j.get("request", {}).get("direction", "") == "incoming":
+        key = j.get("request", {}).get("url", "/0").split("/")[-1]
+        user = database.GetByKey(key)
+        if not user:
+            return {"allowed": False}
+        else:
+            return {"allowed": True, "new_url": j.get("request", {}).get("url", "").replace(key, user["username"])}
+    return {"allowed": False}
 
 
 @app.route('/account', methods=["GET", "POST"])
@@ -69,6 +88,13 @@ def account():
 def logout():
     session.clear()
     return redirect("/", 302)
+
+@app.route("/viewcount/<user>")
+def viewcount(user: str):
+
+    if user.isalnum():
+        return Response(f'<link rel="stylesheet" href="/static/style.css">{api.GetViewers(user)} viewer(s)<meta http-equiv="refresh" content="15">', headers={})
+    return ""
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -126,18 +152,6 @@ def login():
 @app.route("/s/<user>")
 def stream(user):
     return render_template("stream.html", path=user, active=api.IsPathActive(user), info=database.GetAccount(user))
-
-
-@app.route("/thumb/<path>.jpg")
-def thumbnail(path):
-    if path not in thumbs or thumbs[path][1] < time.time():
-        proc = subprocess.Popen(
-            ["ffmpeg", "-hide_banner", "-loglevel", "quiet", "-i", f"{config.hlsurl}/{path}/stream.m3u8",
-             "-vframes", '1', '-vf', "scale=320:-1", "-f", "image2", "-"],
-            stdout=subprocess.PIPE)
-        thumbs[path] = (proc.communicate()[0], time.time() + 60)
-    return Response(thumbs[path][0], mimetype="image/jpeg")
-
 
 @app.route('/about')
 def about():

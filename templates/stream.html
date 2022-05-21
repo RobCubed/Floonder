@@ -5,9 +5,15 @@
         <meta name="viewport"
               content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <meta property="og:title" content="{{ path }} - {{ SITENAME }}" />
+        <meta property="og:type" content="video.other" />
+        <meta property="og:url" content="{{ HOSTNAME }}/s/{{ path }}" />
+        <meta property="og:image" content="{{ THUMBNAILURL }}/{{ path }}/thumb.png" />
+        <meta property="og:description" content="Watch {{ path }} on {{ sitename }} live!" />
+
         <title>{{ path }} - {{ SITENAME }}</title>
         <link rel="stylesheet" href="/static/style.css">
-        <script src="/static/hls.js"></script>
+        <script src="/static/ovenplayer.js"></script>
 
 
     </head>
@@ -18,20 +24,21 @@
             <div class="stream">
                 {% if active %}
                     <input id="fullscreen" type="checkbox">
-                    <video id="video" controls autoplay></video>
+                    <div id="video"></div>
                     <script defer>
-                        var video = document.getElementById('video');
-                        var videoSrc = '{{ HLSURL }}/{{ path }}/stream.m3u8';
-                        if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                            video.src = videoSrc;
-                        } else if (Hls.isSupported()) {
-                            var hls = new Hls();
-                            hls.loadSource(videoSrc);
-                            hls.attachMedia(video);
-                        }
+                        const player = OvenPlayer.create('video', {
+                            sources: [
+                                {
+                                    label: "webrtc",
+                                    type: "webrtc",
+                                    file: "{{ WSURL }}/{{ path }}"
+                                }
+                            ]
+                        })
                     </script>
                     <span class="stream-username">{{ path }}</span> <label class="fullscreen-label" for="fullscreen">⛶</label>
                     <span class="stream-title">{{ info["title"] }}</span>
+                    <iframe src="/viewcount/{{ path }}" frameBorder="0" class="viewcountframe"></iframe>
                 {% else %}
                     <span class="inactive">{{ path }} is currently not streaming.</span>
                 {% endif %}

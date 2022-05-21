@@ -14,9 +14,9 @@
             <div class="content streamlist">
                 {% for stream in streaming %}
                     <div class="streampreview">
-                        <a href="/s/{{ stream[0] }}" class="streamlink"><img src="/thumb/{{ stream[0] }}.jpg"></a>
-                        <span class="preview-title">{{ stream[1]["title"] }}</span>
-                        <span class="preview-username">{{ stream[0] }}</span> <span class="viewcount"></span>
+                        <a href="/s/{{ stream['username'] }}" class="streamlink"><img src="{{ THUMBNAILURL }}/{{ stream['username'] }}/thumb.png"></a>
+                        <span class="preview-title">{{ stream["title"] }}</span>
+                        <span class="preview-username">{{ stream['username'] }}</span> <div class="viewcount">{{ stream['viewcount'] }} viewer(s)</div>
                     </div>
                 {% endfor %}
             </div>

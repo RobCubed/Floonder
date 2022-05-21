@@ -32,8 +32,6 @@ def Initialize():
         "CREATE TABLE IF NOT EXISTS users (`username` STRING, `password` STRING, `title` STRING, `key` STRING, `hidden` INTEGER)")
     _local.execute("CREATE TABLE IF NOT EXISTS invites (`token` TEXT)")
 
-    for row in _local.execute("SELECT * FROM users"):
-        api.AddPath(row["username"], row["key"])
 
 
 def GetAccount(username):
@@ -54,6 +52,10 @@ def CreateAccount(username, password):
                       key,
                       0))
     api.AddPath(username, key)
+
+def GetByKey(key):
+    query = get_db().execute("SELECT * FROM `users` WHERE `key` = ?", (key, ))
+    return query.fetchone()
 
 
 def UpdateAccount(username, title, visibility):
